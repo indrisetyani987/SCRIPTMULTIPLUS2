@@ -86,10 +86,10 @@ systemctl enable --now udp-custom
 
 # ===== SETUP MENU AUTO-RUN =====
 echo "Setting up menu auto-run..."
-if ! grep -q "/usr/local/bin/welcome" /root/.bashrc; then
-    echo "/usr/local/bin/welcome" >> /root/.bashrc
+if ! grep -q "/usr/local/bin/menu" /root/.bashrc; then
+    echo "/usr/local/bin/menu" >> /root/.bashrc
 fi
 
 # ===== SELESAI =====
 echo "Installation complete. Launching menu..."
-/usr/local/bin/m-udp
+/usr/local/bin/menu
