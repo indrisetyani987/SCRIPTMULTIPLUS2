@@ -275,80 +275,6 @@ print_install "Random Subdomain/Domain is Used"
 clear
     fi
 }
-mkdir -p /etc/rmbl/theme
-cat <<EOF>> /etc/rmbl/theme/green
-BG : \E[40;1;42m
-TEXT : \033[0;32m
-EOF
-cat <<EOF>> /etc/rmbl/theme/yellow
-BG : \E[40;1;43m
-TEXT : \033[0;33m
-EOF
-cat <<EOF>> /etc/rmbl/theme/red
-BG : \E[40;1;41m
-TEXT : \033[0;31m
-EOF
-cat <<EOF>> /etc/rmbl/theme/blue
-BG : \E[40;1;44m
-TEXT : \033[0;34m
-EOF
-cat <<EOF>> /etc/rmbl/theme/magenta
-BG : \E[40;1;45m
-TEXT : \033[0;35m
-EOF
-cat <<EOF>> /etc/rmbl/theme/cyan
-BG : \E[40;1;46m
-TEXT : \033[0;36m
-EOF
-cat <<EOF>> /etc/rmbl/theme/lightgray
-BG : \E[40;1;47m
-TEXT : \033[0;37m
-EOF
-cat <<EOF>> /etc/rmbl/theme/darkgray
-BG : \E[40;1;100m
-TEXT : \033[0;90m
-EOF
-cat <<EOF>> /etc/rmbl/theme/lightred
-BG : \E[40;1;101m
-TEXT : \033[0;91m
-EOF
-cat <<EOF>> /etc/rmbl/theme/lightgreen
-BG : \E[40;1;102m
-TEXT : \033[0;92m
-EOF
-cat <<EOF>> /etc/rmbl/theme/lightyellow
-BG : \E[40;1;103m
-TEXT : \033[0;93m
-EOF
-cat <<EOF>> /etc/rmbl/theme/lightblue
-BG : \E[40;1;104m
-TEXT : \033[0;94m
-EOF
-cat <<EOF>> /etc/rmbl/theme/lightmagenta
-BG : \E[40;1;105m
-TEXT : \033[0;95m
-EOF
-cat <<EOF>> /etc/rmbl/theme/lightcyan
-BG : \E[40;1;106m
-TEXT : \033[0;96m
-EOF
-cat <<EOF>> /etc/rmbl/theme/color.conf
-lightcyan
-EOF
-
-mkdir -p /etc/rmbl/warnafont
-cat <<EOF>> /etc/rmbl/warnafont/fontgren
-WARNAF : \033[1;92m
-EOF
-cat <<EOF>> /etc/rmbl/warnafont/fontcyan
-WARNAF : \033[1;96m
-EOF
-cat <<EOF>> /etc/rmbl/warnafont/fontlight
-WARNAF : \033[1;37m
-EOF
-cat <<EOF>> /etc/rmbl/warnafont/warnaf.conf
-fontlight
-EOF
 clear
 #GANTI PASSWORD DEFAULT
 restart_system(){
@@ -865,85 +791,6 @@ apt autoremove -y >/dev/null 2>&1
 print_success "ePro WebSocket Proxy"
 }
 
-function udp-custom(){
-print_install "Menginstall UDP-CUSTOM"
-cd
-rm -rf /root/udp
-mkdir -p /root/udp
-
-# ===== INSTALL UDP-CUSTOM =====
-echo "Downloading udp-custom..."
-wget -q "https://github.com/scriswan/udp/raw/main/udp-custom-linux-amd64" -O /root/udp/udp-custom
-chmod +x /root/udp/udp-custom
-
-# ===== DOWNLOAD DEFAULT CONFIG =====
-echo "Downloading default config..."
-wget -q "https://raw.githubusercontent.com/scriswan/udp/main/config.json" -O /root/udp/config.json
-chmod 644 /root/udp/config.json
-
-# ===== BUAT SYSTEMD SERVICE =====
-if [ -z "$1" ]; then
-cat <<EOF > /etc/systemd/system/udp-custom.service
-[Unit]
-Description=UDP Custom by ePro Dev. Team (modified by allxd)
-
-[Service]
-User=root
-Type=simple
-ExecStart=/root/udp/udp-custom server
-WorkingDirectory=/root/udp/
-Restart=always
-RestartSec=2s
-
-[Install]
-WantedBy=default.target
-EOF
-else
-cat <<EOF > /etc/systemd/system/udp-custom.service
-[Unit]
-Description=UDP Custom by ePro Dev. Team (modified by allxd)
-
-[Service]
-User=root
-Type=simple
-ExecStart=/root/udp/udp-custom server -exclude $1
-WorkingDirectory=/root/udp/
-Restart=always
-RestartSec=2s
-
-[Install]
-WantedBy=default.target
-EOF
-fi
-
-echo start service udp-custom
-systemctl start udp-custom &>/dev/null
-
-echo enable service udp-custom
-systemctl enable udp-custom &>/dev/null
-clear
-print_success "UDP-CUSTOM BY ALLXDDEV STORE VPN"
-}
-
-function noobzvpn(){
-clear
-cd
-print_install "Memasang Noobzvpn"
-wget "${REPO}noobzvpns.zip"
-unzip noobzvpns.zip
-chmod +x noobzvpns/*
-cd noobzvpns
-bash install.sh
-cd
-rm -rf noobzvpns.zip
-echo start service noobzvpns
-systemctl start noobzvpns &>/dev/null
-
-echo enable service noobzvpns
-systemctl enable noobzvpns &>/dev/null
-print_success "NOOBZVPN"
-}
-
 function ins_restart(){
 clear
 cd
@@ -985,7 +832,7 @@ function menu(){
 clear
 cd
 print_install "Memasang Menu Packet"
-wget https://raw.githubusercontent.com/indrisetyani987/SCRIPTMULTIPLUS2/main/menu/menu.zip
+wget https://raw.githubusercontent.com/indrisetyani987/SCRIPTMULTIPLUS2/main/menu.zip
 unzip menu.zip
 chmod +x menu/*
 mv menu/* /usr/local/sbin
@@ -1004,7 +851,7 @@ if [ "$BASH" ]; then
     fi
 fi
 mesg n || true
-welcome
+menu
 EOF
 
 cat >/etc/cron.d/xp_all <<-END
@@ -1120,8 +967,6 @@ clear
     ins_swab
     ins_Fail2ban
     ins_epro
-    udp-custom
-    noobzvpn
     ins_restart
     menu
     profile
